@@ -11,12 +11,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.simplemediasearchapp.network.NetworkManager
 import com.example.simplemediasearchapp.ui.theme.SimpleMediaSearchAppTheme
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
+        runBlocking {
+            NetworkManager.getImageList("테스트", 1)
+            NetworkManager.getVideoList("테스트", 1)
+        }
+//        enableEdgeToEdge()
         setContent {
             SimpleMediaSearchAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
