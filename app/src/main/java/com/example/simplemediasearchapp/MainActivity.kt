@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -27,6 +28,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.simplemediasearchapp.ui.FavoriteScreen
 import com.example.simplemediasearchapp.ui.MediaScreen
 import com.example.simplemediasearchapp.ui.MediaViewModel
 import com.example.simplemediasearchapp.ui.theme.SimpleMediaSearchAppTheme
@@ -42,7 +44,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        viewModel.search("테스트")
         setContent {
             val homeTab = TabBarItem(
                 title = "Home",
@@ -66,11 +67,14 @@ class MainActivity : ComponentActivity() {
                         composable(homeTab.title) {
                             MediaScreen(
                                 viewModel = viewModel,
-                                modifier = Modifier.padding(innerPadding)
+                                modifier = Modifier.padding(innerPadding).fillMaxWidth()
                             )
                         }
                         composable(favTab.title) {
-                            Text(favTab.title)
+                            FavoriteScreen(
+                                viewModel = viewModel,
+                                modifier = Modifier.padding(innerPadding).fillMaxWidth()
+                            )
                         }
                     }
                 }

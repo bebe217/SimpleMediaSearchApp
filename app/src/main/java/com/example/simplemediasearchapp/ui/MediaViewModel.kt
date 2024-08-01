@@ -22,6 +22,8 @@ class MediaListInfo(
 class MediaViewModel: ViewModel() {
     var mediaList = mutableStateListOf<Media>()
         private set
+    var favList = mutableStateListOf<Media>()
+        private set
     private var mediaListInfo: MediaListInfo? = null
     private var isLoading = false
 
@@ -78,6 +80,10 @@ class MediaViewModel: ViewModel() {
     }
 
     fun favorite(media: Media) {
-        println("scrap ${media.thumbnailUrl}")
+        println("favorite ${media.thumbnailUrl}")
+    }
+
+    fun unfavorite(media: Media) {
+        println("unfavorite ${media.thumbnailUrl}")
     }
 }
