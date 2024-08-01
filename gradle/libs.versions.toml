@@ -14,10 +14,12 @@ lifecycleViewmodelCompose = "2.8.4"
 loggingInterceptor = "4.9.3"
 okhttp = "4.12.0"
 retrofit = "2.11.0"
+navigationRuntimeKtx = "2.7.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose" }
 androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata" }
 coil-compose = { module = "io.coil-kt:coil-compose" }
 coil-kt-coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
@@ -38,6 +40,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
