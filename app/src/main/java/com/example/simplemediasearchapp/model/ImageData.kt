@@ -14,4 +14,11 @@ data class ImageData(
     val displaySitename: String,
     val docUrl: String,
     val datetime: String,
-)
+) {
+    fun toMedia(): Media {
+        return Media(
+            thumbnailUrl = this.thumbnailUrl,
+            datetime = this.datetime
+        )
+    }
+}

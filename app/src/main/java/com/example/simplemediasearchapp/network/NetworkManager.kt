@@ -34,6 +34,8 @@ object NetworkManager {
     private val TAG = "NetworkManager"
     private const val BASE_URL = "https://dapi.kakao.com/v2/search/"
 
+    private const val DEFAULT_LIST_SIZE = 20
+
     private val client = OkHttpClient.Builder()
         .addInterceptor(TokenInterceptor())
         .build()
@@ -44,33 +46,27 @@ object NetworkManager {
         .build()
         .create(ApiService::class.java)
 
-    suspend fun getImageList(query: String, page: Int) {
-        try {
-            val result = retrofit.getImages(
+    suspend fun getImageList(query: String, page: Int): ResponseData<ImageData> {
+        return retrofit.getImages(
                 query = query,
-                sort = "recency",
+                sort = SortType.recency.toString(),
                 page = page,
-                size = 20
+                size = DEFAULT_LIST_SIZE
             )
-            Log.d(TAG, "getImageList: $result")
-        } catch (e: Exception) {
-            Log.e(TAG, "getImageList: ", e)
-        }
     }
 
-    suspend fun getVideoList(query: String, page: Int) {
-        try {
-            val result = retrofit.getVideos(
+    suspend fun getVideoList(query: String, page: Int): ResponseData<VideoData> {
+        return retrofit.getVideos(
                 query = query,
-                sort = "recency",
+                sort = SortType.recency.toString(),
                 page = page,
-                size = 20
+                size = DEFAULT_LIST_SIZE
             )
-            Log.d(TAG, "getVideoList: $result")
-        } catch (e: Exception) {
-            Log.e(TAG, "getVideoList: ", e)
-        }
     }
+}
+
+enum class SortType {
+    recency, accuracy
 }
 
 class TokenInterceptor : Interceptor {
