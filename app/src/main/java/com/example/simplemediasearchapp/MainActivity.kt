@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -28,6 +29,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -73,12 +76,32 @@ fun MediaScreen(viewModel: MediaViewModel, modifier: Modifier = Modifier) {
         SearchBar(Modifier.padding(horizontal = 10.dp)) { text ->
             viewModel.search(text)
         }
-        LazyColumn (
-            modifier = modifier
-        ) {
-            items(viewModel.mediaList) { item ->
-                MediaItem(item)
-            }
+        MediaList(viewModel, modifier)
+    }
+}
+
+@Composable
+fun MediaList(viewModel: MediaViewModel, modifier: Modifier = Modifier) {
+    val listState = rememberLazyListState()
+
+    val reachedBottom: Boolean by remember {
+        derivedStateOf {
+            val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
+            lastVisibleItem?.index != 0 && lastVisibleItem?.index == (listState.layoutInfo.totalItemsCount - 1)
+        }
+    }
+
+    LaunchedEffect(reachedBottom) {
+        println("reachedBottom $reachedBottom")
+        if (reachedBottom) viewModel.loadMore()
+    }
+    
+    LazyColumn (
+        modifier = modifier,
+        state = listState
+    ) {
+        items(viewModel.mediaList) { item ->
+            MediaItem(item)
         }
     }
 }
@@ -134,12 +157,16 @@ fun MediaItem(item: Media) {
                     .build(),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxHeight().width(200.dp)
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(200.dp)
             )
             Text(
                 text = item.datetime,
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.height(60.dp).padding(horizontal = 16.dp),
+                modifier = Modifier
+                    .height(60.dp)
+                    .padding(horizontal = 16.dp),
             )
         }
     }

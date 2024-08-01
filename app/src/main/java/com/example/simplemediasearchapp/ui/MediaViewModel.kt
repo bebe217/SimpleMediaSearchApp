@@ -23,11 +23,14 @@ class MediaViewModel: ViewModel() {
     var mediaList = mutableStateListOf<Media>()
         private set
     private var mediaListInfo: MediaListInfo? = null
+    private var isLoading = false
 
     fun search(query: String) {
         println("search $query")
+        if (isLoading) return
         val page = 1
         viewModelScope.launch {
+            isLoading = true
             val imageDeferred = async {
                 NetworkManager.getImageList(query, page)
             }
@@ -39,6 +42,30 @@ class MediaViewModel: ViewModel() {
             mediaListInfo = MediaListInfo(query, page, imageData.meta, videoData.meta)
             mediaList.clear()
             appendMediaList(imageData, videoData)
+            isLoading = false
+        }
+    }
+
+    fun loadMore() {
+        println("loadMore")
+        mediaListInfo?.let {
+            if (isLoading) return
+            if (it.imageMeta.isEnd || it.videoMeta.isEnd) return
+            viewModelScope.launch {
+                isLoading = true
+                val page = it.page + 1
+                val imageDeferred = async {
+                    NetworkManager.getImageList(it.query, page)
+                }
+                val videoDeferred = async {
+                    NetworkManager.getVideoList(it.query, page)
+                }
+                val imageData = imageDeferred.await()
+                val videoData = videoDeferred.await()
+                mediaListInfo = MediaListInfo(it.query, page, imageData.meta, videoData.meta)
+                appendMediaList(imageData, videoData)
+                isLoading = false
+            }
         }
     }
 
@@ -47,7 +74,6 @@ class MediaViewModel: ViewModel() {
         list.addAll(imageData.documents.map { it.toMedia() })
         list.addAll(videoData.documents.map { it.toMedia() })
         list.sortByDescending { it.datetime }
-        mediaList.clear()
         mediaList.addAll(list)
     }
 }

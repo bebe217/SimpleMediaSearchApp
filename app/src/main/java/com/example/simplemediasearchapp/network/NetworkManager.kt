@@ -36,7 +36,7 @@ object NetworkManager {
     private val TAG = "NetworkManager"
     private const val BASE_URL = "https://dapi.kakao.com/v2/search/"
 
-    private const val DEFAULT_LIST_SIZE = 20
+    private const val DEFAULT_LIST_SIZE = 10
 
     val logger = HttpLoggingInterceptor().apply { level = Level.BASIC }
     private val client = OkHttpClient.Builder()
