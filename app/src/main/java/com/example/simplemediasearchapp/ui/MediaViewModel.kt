@@ -1,8 +1,10 @@
 package com.example.simplemediasearchapp.ui
 
+import android.content.Context
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.simplemediasearchapp.DataStorage
 import com.example.simplemediasearchapp.model.ImageData
 import com.example.simplemediasearchapp.model.Media
 import com.example.simplemediasearchapp.model.Meta
@@ -26,6 +28,8 @@ class MediaViewModel: ViewModel() {
         private set
     private var mediaListInfo: MediaListInfo? = null
     private var isLoading = false
+
+    lateinit var dataStorage: DataStorage
 
     fun search(query: String) {
         println("search $query")
@@ -79,11 +83,20 @@ class MediaViewModel: ViewModel() {
         mediaList.addAll(list)
     }
 
+    fun loadFavList() {
+        favList.addAll(dataStorage.getArrayList())
+    }
+
     fun favorite(media: Media) {
         println("favorite ${media.thumbnailUrl}")
+        favList.add(media)
+        dataStorage.saveArrayList(favList.toList())
     }
 
     fun unfavorite(media: Media) {
         println("unfavorite ${media.thumbnailUrl}")
+        favList.remove(media)
+        dataStorage.saveArrayList(favList.toList())
     }
+
 }

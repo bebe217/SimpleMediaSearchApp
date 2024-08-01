@@ -44,6 +44,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        viewModel.dataStorage = DataStorage(this)
+        viewModel.loadFavList()
+
         setContent {
             val homeTab = TabBarItem(
                 title = "Home",
