@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +21,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -101,7 +104,9 @@ fun MediaList(viewModel: MediaViewModel, modifier: Modifier = Modifier) {
         state = listState
     ) {
         items(viewModel.mediaList) { item ->
-            MediaItem(item)
+            MediaItem(item) {
+                viewModel.favorite(it)
+            }
         }
     }
 }
@@ -138,7 +143,7 @@ fun SearchBar(
 }
 
 @Composable
-fun MediaItem(item: Media) {
+fun MediaItem(item: Media, onClick: (item: Media) -> Unit) {
     Surface(
         shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.surfaceVariant,
@@ -146,6 +151,9 @@ fun MediaItem(item: Media) {
             .fillMaxWidth()
             .height(180.dp)
             .padding(7.dp)
+            .clickable {
+                onClick(item)
+            }
     ) {
         Row(
             verticalAlignment = Alignment.Bottom,
@@ -161,13 +169,23 @@ fun MediaItem(item: Media) {
                     .fillMaxHeight()
                     .width(200.dp)
             )
-            Text(
-                text = item.datetime,
-                style = MaterialTheme.typography.titleMedium,
+            Column(
+                horizontalAlignment = Alignment.End,
                 modifier = Modifier
-                    .height(60.dp)
-                    .padding(horizontal = 16.dp),
-            )
+                    .padding(16.dp)
+            ) {
+                Icon(
+                    imageVector =
+                        if (item.favorite) Icons.Default.Favorite
+                        else Icons.Default.FavoriteBorder
+                    ,
+                    contentDescription = null,
+                )
+                Spacer(modifier = Modifier.weight(1F))
+                Text(
+                    text = item.datetime,
+                )
+            }
         }
     }
 }
@@ -175,14 +193,24 @@ fun MediaItem(item: Media) {
 @Preview(showBackground = true)
 @Composable
 fun MediaPreview() {
+    val mediaList = listOf(
+        Media(
+            thumbnailUrl = "https://search3.kakaocdn.net/argon/130x130_85_c/2VhUMKQRSTf",
+            datetime = "2024-08-01T12:41:55.000+09:00"
+        ),
+        Media(
+            thumbnailUrl = "https://search3.kakaocdn.net/argon/130x130_85_c/3YlTYmz58I1",
+            datetime = "2024-08-01T12:34:44.000+09:00"
+        )
+    )
     SimpleMediaSearchAppTheme {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             LazyColumn (
                 modifier = Modifier.padding(innerPadding)
             ) {
-//                items(mediaTempList) { item ->
-//                    MediaItem(item)
-//                }
+                items(mediaList) { item ->
+                    MediaItem(item) {}
+                }
             }
         }
     }

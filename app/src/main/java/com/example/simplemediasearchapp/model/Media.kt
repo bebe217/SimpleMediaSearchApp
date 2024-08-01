@@ -4,5 +4,7 @@ import java.time.LocalDateTime
 
 data class Media(
     val thumbnailUrl: String,
-    val datetime: String
-)
+    val datetime: String,
+    val favorite: Boolean = false
+) {
+}

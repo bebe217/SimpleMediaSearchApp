@@ -76,4 +76,8 @@ class MediaViewModel: ViewModel() {
         list.sortByDescending { it.datetime }
         mediaList.addAll(list)
     }
+
+    fun favorite(media: Media) {
+        println("scrap ${media.thumbnailUrl}")
+    }
 }
