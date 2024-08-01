@@ -10,4 +10,11 @@ data class VideoData(
     val url: String,
     val datetime: String,
     val author: String,
-)
+) {
+    fun toMedia(): Media {
+        return Media(
+            thumbnailUrl = this.thumbnail,
+            datetime = this.datetime
+        )
+    }
+}
